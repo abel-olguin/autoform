@@ -1,4 +1,4 @@
 autoform
 ========
 
-conexion to db
+create a automatic form with a db tables 
