@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 $user="pruebas";
 $pass="pruebas";
 $db="baseprueba";
@@ -136,12 +137,51 @@ function crearArchivos($rutaForm){
 					</body>\n
 					</html>	\n	
 					";
+=======
+function crearArchivos($rutaVista){
+	$header=$rutaVista."header.php";
+  $index=$rutaVista."index.php";
+	$footer=$rutaVista."footer.php";
+
+	
+
+		  $fHeader = fopen($header,"a");
+    	$fFooter = fopen($footer,"a");
+      $fIndex = fopen($index, "a");
+    	/*template*/
+    	
+    	$headerText="
+          				<!-- Form desing by vendetta -->\n
+          				<html lang='es'> \n
+        					<head>\n
+        					<meta charset='utf-8'>\n
+        					<meta http-equiv='X-UA-Compatible' content=IE='edge'>\n
+        					<meta name='viewport' content='width=device-width, initial-scale=1'>\n
+        					<title>Form</title>\n
+        					</head>\n
+        					<body>\n
+        					<div class='container'>\n";
+      $indexText="<?php \n require_once('templates/form.php');\n ?>";
+		  $footerText="
+      					</div>\n
+      					<footer>\n
+      					</footer>\n
+      					</body>\n
+      					</html>	\n	";
+>>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
 
 				if (fwrite($fHeader,$headerText) === FALSE) {
         			echo "No se puede escribir en el archivo header";
        			 exit;
    				 }
+<<<<<<< HEAD
 
+=======
+           if (fwrite($fIndex,$indexText) === FALSE) {
+              echo "No se puede escribir en el archivo index";
+             exit;
+           }
+>>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
    				if (fwrite($fFooter,$footerText) === FALSE) {
         			echo "No se puede escribir en el archivo footer";
        			 exit;
@@ -154,6 +194,13 @@ function crearArchivos($rutaForm){
 
 function crearDirectorios($base){
 	$result=0;
+<<<<<<< HEAD
+=======
+    rrmdir($base);
+    rrmdir($base."/templates");
+    rrmdir($base."/functions");
+
+>>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
 	if(!mkdir($base,0777)){
     		die('Fallo al crear las carpetas...');
     	}else{
@@ -181,6 +228,7 @@ function crearConexion($user,$pass,$db,$rutaFunciones){
 	$fConexion=fopen($conexion, "a");
 
 	$conexionText="<?php \n";
+<<<<<<< HEAD
 	$conexionText.='$conexion= mysql_connect("localhost","'.$user.'","'.$pass.'");';
 	$conexionText.="\n";
 	$conexionText.='if(!$conexion){';
@@ -192,6 +240,23 @@ function crearConexion($user,$pass,$db,$rutaFunciones){
 	$conexionText.='$conexion);';
 	$conexionText.="\n
 					?>";
+=======
+	$conexionText.='$conexion= new mysqli("localhost","'.$user.'","'.$pass.'");';
+	$conexionText.="\n";
+	$conexionText.='if($conexion->connect_errno){';
+	$conexionText.="\n";
+	$conexionText.="die('No se ha podido conectar a la BD: ' .";
+  $conexionText.='$conexion->connect_errno);';
+  $conexionText.="\n
+        					}\n";
+  $conexionText.='$conexion->query(';
+  $conexionText.="'SET NAMES \'utf8\'');";
+  $conexionText.="\n";
+  $conexionText.='$conexion->select_db(';
+  $conexionText.="'$db');";
+	$conexionText.="\n
+					       ?>";
+>>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
 
 	if (fwrite($fConexion,$conexionText) === FALSE) {
         			echo "No se puede escribir en el archivo footer";
@@ -200,4 +265,21 @@ function crearConexion($user,$pass,$db,$rutaFunciones){
    				 fclose($fConexion);
 
 }
+<<<<<<< HEAD
 ?>
+=======
+
+function rrmdir($dir) {
+   if (is_dir($dir)) {
+     $objects = scandir($dir);
+     foreach ($objects as $object) {
+       if ($object != "." && $object != "..") {
+         if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+       }
+     }
+     reset($objects);
+     rmdir($dir);
+   }
+}
+?>
+>>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
