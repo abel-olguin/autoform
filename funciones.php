@@ -1,276 +1,157 @@
 <?php
-<<<<<<< HEAD
-$user="pruebas";
-$pass="pruebas";
-$db="baseprueba";
+/**
+ * @param $ruta_vista
+ *
+ * Crea todos los archivos necesarios
+ *
+ * Funcion encargada de crear todo el arbol de
+ * archivos que son necesarios para el formulario
+ */
+function crearArchivos($ruta_vista){
 
-$conexion = mysql_connect("localhost" , "pruebas" , "pruebas");
-if (!$conexion)
-  {
-    die("No se ha podido conectar a la BD: " . mysql_error());
-  }
+    $title       = explode('/',$ruta_vista);
+	$header      = $ruta_vista."/header.php";
+    $index       = $ruta_vista."/index.php";
+	$footer      = $ruta_vista."/footer.php";
 
-
-mysql_query('SET NAMES \'utf8\'');
-
-?>
-
-<?php
-$sql = "SHOW TABLES FROM baseprueba";
-$resultado = mysql_query($sql);
-mysql_select_db("baseprueba",$conexion);
-if (!$resultado) {
-    echo "Error de BD, no se pudieron listar las tablas\n";
-    echo 'Error MySQL: ' . mysql_error();
-    exit;
-}
-
-while ($fila = mysql_fetch_row($resultado)) {
-/*crear carpetas y archivos*/
-		
-
-    	$rutaForms=$fila[0]."/templates/";
-    	$rutaFunciones=$fila[0]."/functions/";
-
-    	$rutaForm=$rutaForms."form.php";
-    	$rutaFuncion=$rutaFunciones."result.php";
-
-    	if(crearDirectorios($fila[0])){
-    		crearArchivos($rutaForms);
-    		crearConexion($user,$pass,$db,$rutaFunciones);
-    	}
-    	
-    	$form=fopen($rutaForm, "a");
-    	$funcion=fopen($rutaFuncion, "a");
-
-    	$textForm="<form action='../../$rutaFuncion' method=post>\n";
-    	$textFuncion="<?php \n
-    					require_once('conexion.php');\n";
-    	$insercion='$sql="INSERT INTO '.$fila[0].'(';
-    		$values="";
-    		$valuesName="";
-/*crear carpetas y directorios fin*/
-/*obtener tablas*/
-			    $columnas = mysql_query("SHOW COLUMNS FROM $fila[0]");
-					if (!$columnas) {
-			   		echo 'No se pudo ejecutar la consulta: ' . mysql_error();
-			    	exit;
-					}
-						$numero_columnas=mysql_num_rows($columnas);
-				if (mysql_num_rows($columnas) > 0) {
-		    		while ($filas = mysql_fetch_assoc($columnas)) {
-		    			$numero_columnas--;
-		    			extract($filas);
-		  				
-		    			$textForm .="<input type='text' name='$Field' id='$Field' class='class_$Field'>\n";
-		    			$textFuncion.='$'.$Field.'=$_POST["'.$Field.'"];';
-		    			$textFuncion.="\n";
-		    			echo $numero_columnas;
-		    			if($numero_columnas == 0){
-		    				$values.=$Field;
-		    				$valuesName.='$'.$Field;
-		    			}else{
-		    				$values.=$Field.',';
-		    				$valuesName.='$'.$Field.',';
-		    			}
-		    			
-
-		   			 }
-					}
-					$textFuncion.="\n";
-					$insercion.=$values.')VALUES('.$valuesName.')";';
-					$insercion.="\n";
-					$textFuncion.=$insercion.'$result = mysql_query ($sql);';
-					$textFuncion.="\n";
-					$textFuncion.='if(!$result){';
-					
-					$textFuncion.="\n die('no se pudo insertar');\n
-									echo mysql_error();\n
-									}\n
-									?>";
+    $header_root = 'sources/header.php';
+    $footer_root = 'sources/footer.php';
+    $index_root  = 'sources/index.php';
 
 
-					$textForm.="<input type='submit' value='enviar'>\n</form>";
 
-					if (fwrite($funcion,$textFuncion) === FALSE) {
-        			echo "No se puede escribir en el archivo funcion";
-       			 exit;
-   				 }
-   				 if (fwrite($form,$textForm) === FALSE) {
-        			echo "No se puede escribir en el archivo form";
-       			 exit;
-   				 }
-   				 fclose($funcion);
-   				 fclose($form);
 
-}
+				if (!copy($header_root,$header))
+                {
+        			die("No se puede escribir en el archivo header");
+   				}
+                else
+                {
+                    search_and_replace($header,array('--title_str--'),$title);
+                }
 
-mysql_free_result($resultado);
+                if (!copy($footer_root,$footer))
+                {
+                    die("No se puede escribir en el archivo header");
+                }
 
-?>
-
-<?php
-function crearArchivos($rutaForm){
-	$header=$rutaForm."header.php";
-	$footer=$rutaForm."footer.php";
-	
-
-		$fHeader = fopen($header,"a");
-    	$fFooter = fopen($footer,"a");
-    	/*template*/
-    	
-    	$headerText="
-    				<!-- Form desing by vendetta -->\n
-    				<html lang='es'> \n
-					<head>\n
-					<meta charset='utf-8'>\n
-					<meta http-equiv='X-UA-Compatible' content=IE='edge'>\n
-					<meta name='viewport' content='width=device-width, initial-scale=1'>\n
-					<title>Form</title>\n
-					</head>\n
-					<body>\n
-					<div class='container'>\n";
-		$footerText="
-					</div>\n
-					<footer>\n
-					</footer>\n
-					</body>\n
-					</html>	\n	
-					";
-=======
-function crearArchivos($rutaVista){
-	$header=$rutaVista."header.php";
-  $index=$rutaVista."index.php";
-	$footer=$rutaVista."footer.php";
-
-	
-
-		  $fHeader = fopen($header,"a");
-    	$fFooter = fopen($footer,"a");
-      $fIndex = fopen($index, "a");
-    	/*template*/
-    	
-    	$headerText="
-          				<!-- Form desing by vendetta -->\n
-          				<html lang='es'> \n
-        					<head>\n
-        					<meta charset='utf-8'>\n
-        					<meta http-equiv='X-UA-Compatible' content=IE='edge'>\n
-        					<meta name='viewport' content='width=device-width, initial-scale=1'>\n
-        					<title>Form</title>\n
-        					</head>\n
-        					<body>\n
-        					<div class='container'>\n";
-      $indexText="<?php \n require_once('templates/form.php');\n ?>";
-		  $footerText="
-      					</div>\n
-      					<footer>\n
-      					</footer>\n
-      					</body>\n
-      					</html>	\n	";
->>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
-
-				if (fwrite($fHeader,$headerText) === FALSE) {
-        			echo "No se puede escribir en el archivo header";
-       			 exit;
-   				 }
-<<<<<<< HEAD
-
-=======
-           if (fwrite($fIndex,$indexText) === FALSE) {
-              echo "No se puede escribir en el archivo index";
-             exit;
-           }
->>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
-   				if (fwrite($fFooter,$footerText) === FALSE) {
-        			echo "No se puede escribir en el archivo footer";
-       			 exit;
-   				 }
-
-   				 fclose($fHeader);
-   				 fclose($fFooter);
+                if (!copy($index_root ,$index))
+                {
+                    die("No se puede escribir en el archivo header");
+                }
    				 echo "exito";
 }
 
+/**
+ * @param $base
+ * @return int
+ *
+ * crea las carpetas necesarias
+ *
+ * Funcion encargada de crear las carpetas necesarias
+ * para el funcionamiento del formulario
+ */
 function crearDirectorios($base){
-	$result=0;
-<<<<<<< HEAD
-=======
-    rrmdir($base);
-    rrmdir($base."/templates");
-    rrmdir($base."/functions");
 
->>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
-	if(!mkdir($base,0777)){
-    		die('Fallo al crear las carpetas...');
-    	}else{
-    		$result=1;
-    	}
-    	if(!mkdir($base."/templates",0777)){
-    		die('Fallo al crear las carpetas...');
-    	}else{
-    		$result+=1;
-    	}
-    	if(!mkdir($base."/functions",0777)){
-    		die('Fallo al crear las carpetas...');
-    	}else{
-    		$result+=1;
-    	}
-    	if($result/3==1){
-    		return 1;
-    	}else{
-    		return 0;
-    	}
-}
+    $result = 0;
+	$root   = explode('/',$base)[0];
 
-function crearConexion($user,$pass,$db,$rutaFunciones){
-	$conexion=$rutaFunciones."conexion.php";
-	$fConexion=fopen($conexion, "a");
 
-	$conexionText="<?php \n";
-<<<<<<< HEAD
-	$conexionText.='$conexion= mysql_connect("localhost","'.$user.'","'.$pass.'");';
-	$conexionText.="\n";
-	$conexionText.='if(!$conexion){';
-	$conexionText.="\n";
-	$conexionText.="die('No se ha podido conectar a la BD: ' . mysql_error());\n
-					}\n
-					mysql_query('SET NAMES \'utf8\'');\n
-					mysql_select_db('$db',";
-	$conexionText.='$conexion);';
-	$conexionText.="\n
-					?>";
-=======
-	$conexionText.='$conexion= new mysqli("localhost","'.$user.'","'.$pass.'");';
-	$conexionText.="\n";
-	$conexionText.='if($conexion->connect_errno){';
-	$conexionText.="\n";
-	$conexionText.="die('No se ha podido conectar a la BD: ' .";
-  $conexionText.='$conexion->connect_errno);';
-  $conexionText.="\n
-        					}\n";
-  $conexionText.='$conexion->query(';
-  $conexionText.="'SET NAMES \'utf8\'');";
-  $conexionText.="\n";
-  $conexionText.='$conexion->select_db(';
-  $conexionText.="'$db');";
-	$conexionText.="\n
-					       ?>";
->>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
+            rrmdir($base."/templates");
+            rrmdir($base."/functions");
+            rrmdir($base);
 
-	if (fwrite($fConexion,$conexionText) === FALSE) {
-        			echo "No se puede escribir en el archivo footer";
-       			 exit;
-   				 }
-   				 fclose($fConexion);
+        if(!is_dir($root))
+        {
+            if(!mkdir($root,0777))
+            {
+                die('Fallo al crear la carpeta base');
+            }
+            else
+            {
+                $result++;
+            }
+
+        }
+
+        if(mkdir($base))
+        {
+            $result ++;
+        }
+        else
+        {
+            die('Fallo al crear la carpeta identificadora');
+        }
+        if(mkdir($base."/templates",0777))
+        {
+            $result++;
+        }
+        else
+        {
+            die('Fallo al crear las template');
+        }
+        if(mkdir($base."/functions",0777))
+        {
+            $result++;
+        }
+        else
+        {
+            die('Fallo al crear la carpeta functions');
+        }
+
+        if($result == 3 || $result == 4)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 
 }
-<<<<<<< HEAD
-?>
-=======
 
+/**
+ * @param $user
+ * @param $pass
+ * @param $db
+ * @param $ruta_funciones
+ *
+ * Crea el archivo de conexion
+ *
+ * Funcion encargada de crear el archivo de conexion
+ * para realizar inserciones en el formulario posteriormente
+ */
+function crearConexion($user,$pass,$db,$ruta_funciones){
+
+	$conexion       = $ruta_funciones."conexion.php";
+	$conexion_root  = 'sources/conexion.php';
+
+	if (!copy($conexion_root,$conexion))
+    {
+        die("No se puede escribir en el archivo conexion");
+    }
+    else
+    {
+        $search  = array('--name_str--','--pass_str--','--db_str--');
+        $replace = array($user,$pass,$db);
+        search_and_replace($conexion,$search,$replace);
+
+    }
+
+
+}
+
+/**
+ * @param $dir
+ * Elimina un directorio y su arbol de archivos
+ *
+ * Funcion encargada de eliminar un directorio incluyendo su arbol de archivos
+ * (todo lo que contenga el directorio)
+ */
 function rrmdir($dir) {
+
    if (is_dir($dir)) {
+
      $objects = scandir($dir);
      foreach ($objects as $object) {
        if ($object != "." && $object != "..") {
@@ -281,5 +162,23 @@ function rrmdir($dir) {
      rmdir($dir);
    }
 }
+
+/**
+ * @param $path
+ * @param $search
+ * @param $replace
+ *
+ * Busca y reemplaza en un archivo
+ *
+ * Funcion encargada de buscar y reemplazar en un archivo
+ *
+ */
+function search_and_replace($path,$search,$replace)
+{
+    $path_to_file  = $path;
+    $file_contents = file_get_contents($path_to_file);
+    $file_contents = str_replace($search,$replace,$file_contents);
+
+    file_put_contents($path_to_file,$file_contents);
+}
 ?>
->>>>>>> fa5979907f962cb72c8e78bf3478740cbe38af9a
