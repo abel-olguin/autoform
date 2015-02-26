@@ -175,10 +175,18 @@ function rrmdir($dir) {
  */
 function search_and_replace($path,$search,$replace)
 {
-    $path_to_file  = $path;
-    $file_contents = file_get_contents($path_to_file);
+    if(!is_array($search))
+    {
+        $search = array($search);
+    }
+    if(!is_array($replace))
+    {
+        $replace = array($replace);
+    }
+
+    $file_contents = file_get_contents($path);
     $file_contents = str_replace($search,$replace,$file_contents);
 
-    file_put_contents($path_to_file,$file_contents);
+    file_put_contents($path,$file_contents);
 }
 ?>
